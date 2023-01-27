@@ -28,6 +28,9 @@ class Main:
         self.input001 = []
         self.input002 = []
         self.input003 = []
+        self.input001_average_execution_time = []
+        self.input002_average_execution_time = []
+        self.input003_average_execution_time = []
         self.read_file()
         self.convert_string_to_int()
         # ---------------------- test ----------------------
@@ -76,15 +79,127 @@ class Main:
                 with open(i, 'w', encoding='utf-8') as f_w:
                     f_w.writelines(data[2:])
 
-    def insertion_sort(self):
-        print(len(self.input001))
-        for i in range(len(self.input001)-1):
-            for j in range(i+1, 0, -1):
-                if(self.input001[j]['number_of_graduates_in_the_last_year'] > self.input001[j-1]['number_of_graduates_in_the_last_year']):
-                    temp = self.input001[j-1]
-                    self.input001[j-1] = self.input001[j]
-                    self.input001[j] = temp
-        return self.input001
+    def average_execution_time_insertion_sort(self):
+        for i in range(10):
+            start = time.time()
+            self.insertion_sort(1)
+            end = time.time()
+            elapsed_time = end-start
+            self.input001_average_execution_time.append(elapsed_time)
+        for i in range(10):
+            start = time.time()
+            self.insertion_sort(2)
+            end = time.time()
+            elapsed_time = end-start
+            self.input002_average_execution_time.append(elapsed_time)
+        for i in range(10):
+            start = time.time()
+            self.insertion_sort(3)
+            end = time.time()
+            elapsed_time = end-start
+            self.input003_average_execution_time.append(elapsed_time)
+        print('------------------------Insertion sort------------------------------------------------')
+        print(
+            f'Average execution time of input001.txt: {sum(self.input001_average_execution_time)/10}')
+        print(
+            f'Average execution time of input002.txt: {sum(self.input002_average_execution_time)/10}')
+        print(
+            f'Average execution time of input003.txt: {sum(self.input003_average_execution_time)/10}')
+        print('--------------------------------------------------------------------------------------')
+
+    def average_execution_time_merge_sort(self):
+        for i in range(10):
+            start = time.time()
+            self.merge_sort(1)
+            end = time.time()
+            elapsed_time = end-start
+            self.input001_average_execution_time.append(elapsed_time)
+        for i in range(10):
+            start = time.time()
+            self.merge_sort(2)
+            end = time.time()
+            elapsed_time = end-start
+            self.input002_average_execution_time.append(elapsed_time)
+        for i in range(10):
+            start = time.time()
+            self.merge_sort(3)
+            end = time.time()
+            elapsed_time = end-start
+            self.input003_average_execution_time.append(elapsed_time)
+        print('------------------------Merge sort------------------------------------------------')
+        print(
+            f'Average execution time of input001.txt: {sum(self.input001_average_execution_time)/10}')
+        print(
+            f'Average execution time of input002.txt: {sum(self.input002_average_execution_time)/10}')
+        print(
+            f'Average execution time of input003.txt: {sum(self.input003_average_execution_time)/10}')
+
+    def insertion_sort(self, file):
+        if (file == 1):
+            for i in range(len(self.input001)-1):
+                for j in range(i+1, 0, -1):
+                    if(self.input001[j]['number_of_graduates_in_the_last_year'] > self.input001[j-1]['number_of_graduates_in_the_last_year']):
+                        temp = self.input001[j-1]
+                        self.input001[j-1] = self.input001[j]
+                        self.input001[j] = temp
+            return self.input001
+        elif(file == 2):
+            for i in range(len(self.input002)-1):
+                for j in range(i+1, 0, -1):
+                    if(self.input002[j]['number_of_graduates_in_the_last_year'] > self.input002[j-1]['number_of_graduates_in_the_last_year']):
+                        temp = self.input002[j-1]
+                        self.input002[j-1] = self.input002[j]
+                        self.input002[j] = temp
+            return self.input002
+        elif(file == 3):
+            for i in range(len(self.input003)-1):
+                for j in range(i+1, 0, -1):
+                    if(self.input003[j]['number_of_graduates_in_the_last_year'] > self.input003[j-1]['number_of_graduates_in_the_last_year']):
+                        temp = self.input003[j-1]
+                        self.input003[j-1] = self.input003[j]
+                        self.input003[j] = temp
+            return self.input003
+
+    def merge(self, left, right):
+        temp = []
+        while(len(left) > 0 and len(right) > 0):
+            if(right[0]['number_of_graduates_in_the_last_year'] > left[0]['number_of_graduates_in_the_last_year']):
+                temp.append(right.pop(0))
+            else:
+                temp.append(left.pop(0))
+
+        if (len(left)):
+            temp = temp + left
+        else:
+            temp = temp + right
+
+        return temp
+
+    def merge_sort(self, file):
+        if(file == 1):
+            if(len(self.input001) < 2):
+                return self.input001
+
+            mid = len(self.input001) // 2
+            left_array = self.input001[:mid]
+            right_array = self.input001[mid:]
+            return self.merge(self.merge_sort_test(left_array), self.merge_sort_test(right_array))
+        elif(file == 2):
+            if(len(self.input002) < 2):
+                return self.input002
+
+            mid = len(self.input002) // 2
+            left_array = self.input002[:mid]
+            right_array = self.input002[mid:]
+            return self.merge(self.merge_sort_test(left_array), self.merge_sort_test(right_array))
+        elif(file == 3):
+            if(len(self.input003) < 2):
+                return self.input003
+
+            mid = len(self.input003) // 2
+            left_array = self.input003[:mid]
+            right_array = self.input003[mid:]
+            return self.merge(self.merge_sort_test(left_array), self.merge_sort_test(right_array))
 
     def generate_a_list_of_random_numbers(self):
         self.list_A = [i for i in range(10000)]
@@ -100,15 +215,23 @@ class Main:
                     self.list_A[j] = temp
         return self.list_A
 
+    def merge_sort_test(self, array):
+        if(len(array) < 2):
+            return array
+
+        mid = len(array) // 2
+        left_array = array[:mid]
+        right_array = array[mid:]
+        return self.merge(self.merge_sort_test(left_array), self.merge_sort_test(right_array))
+
 
 if __name__ == '__main__':
-    main = Main()
-    # print(type(main.input001[0]['number_of_graduates_in_the_last_year']))
-    start = time.time()
-    print(main.insertion_sort())
-    end = time.time()
-    elapsed_time = end-start
-    print(elapsed_time)
+    main_insertion_sort = Main()
+    main_merge_sort = Main()
+
+    main_insertion_sort.average_execution_time_insertion_sort()
+    main_merge_sort.average_execution_time_merge_sort()
+
     # ---------------------- test ----------------------
     """
     start = time.time()
@@ -116,5 +239,6 @@ if __name__ == '__main__':
     end = time.time()
     elapsed_time = end-start
     print(elapsed_time)
+    main.merge_sort_test([5, 1, 8, 6, 9])
     """
     # ---------------------- test ----------------------
