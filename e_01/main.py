@@ -1,5 +1,6 @@
 import time
 import random
+from tabulate import tabulate  # 建立表格
 
 
 class School:
@@ -79,6 +80,15 @@ class Main:
                 with open(i, 'w', encoding='utf-8') as f_w:
                     f_w.writelines(data[2:])
 
+    def write(self, average_execution_time_insertion_sort, average_execution_time_merge_sort):
+        header = ['插入排序', '合併排序']
+        data = []
+        with open('sort_time.txt', 'w', encoding='utf-8') as f_w:
+            for i in range(3):
+                data.append(
+                    (f'測試資料檔 {i+1}.',  average_execution_time_insertion_sort[i], average_execution_time_merge_sort[i]))
+            f_w.write(tabulate(data, headers=header))
+
     def average_execution_time_insertion_sort(self):
         for i in range(10):
             start = time.time()
@@ -98,14 +108,26 @@ class Main:
             end = time.time()
             elapsed_time = end-start
             self.input003_average_execution_time.append(elapsed_time)
+
+        a1 = sum(self.input001_average_execution_time)/10
+        a2 = sum(self.input002_average_execution_time)/10
+        a3 = sum(self.input003_average_execution_time)/10
+
         print('------------------------Insertion sort------------------------------------------------')
         print(
-            f'Average execution time of input001.txt: {sum(self.input001_average_execution_time)/10}')
+            f'Average execution time of input001.txt: {a1}')
         print(
-            f'Average execution time of input002.txt: {sum(self.input002_average_execution_time)/10}')
+            f'Average execution time of input002.txt: {a2}')
         print(
-            f'Average execution time of input003.txt: {sum(self.input003_average_execution_time)/10}')
+            f'Average execution time of input003.txt: {a3}')
         print('--------------------------------------------------------------------------------------')
+
+        self.input001_average_execution_time.clear()
+        self.input002_average_execution_time.clear()
+        self.input003_average_execution_time.clear()
+        self.input001_average_execution_time.append(a1)
+        self.input002_average_execution_time.append(a2)
+        self.input003_average_execution_time.append(a3)
 
     def average_execution_time_merge_sort(self):
         for i in range(10):
@@ -126,13 +148,26 @@ class Main:
             end = time.time()
             elapsed_time = end-start
             self.input003_average_execution_time.append(elapsed_time)
+
+        a1 = sum(self.input001_average_execution_time)/10
+        a2 = sum(self.input002_average_execution_time)/10
+        a3 = sum(self.input003_average_execution_time)/10
+
         print('------------------------Merge sort------------------------------------------------')
         print(
-            f'Average execution time of input001.txt: {sum(self.input001_average_execution_time)/10}')
+            f'Average execution time of input001.txt: {a1}')
         print(
-            f'Average execution time of input002.txt: {sum(self.input002_average_execution_time)/10}')
+            f'Average execution time of input002.txt: {a2}')
         print(
-            f'Average execution time of input003.txt: {sum(self.input003_average_execution_time)/10}')
+            f'Average execution time of input003.txt: {a3}')
+        print('--------------------------------------------------------------------------------------')
+
+        self.input001_average_execution_time.clear()
+        self.input002_average_execution_time.clear()
+        self.input003_average_execution_time.clear()
+        self.input001_average_execution_time.append(a1)
+        self.input002_average_execution_time.append(a2)
+        self.input003_average_execution_time.append(a3)
 
     def insertion_sort(self, file):
         if (file == 1):
@@ -231,6 +266,8 @@ if __name__ == '__main__':
 
     main_insertion_sort.average_execution_time_insertion_sort()
     main_merge_sort.average_execution_time_merge_sort()
+    main_merge_sort.write([main_insertion_sort.input001_average_execution_time,
+                          main_insertion_sort.input002_average_execution_time, main_insertion_sort.input003_average_execution_time], [main_merge_sort.input001_average_execution_time, main_merge_sort.input002_average_execution_time, main_merge_sort.input003_average_execution_time])
 
     # ---------------------- test ----------------------
     """
