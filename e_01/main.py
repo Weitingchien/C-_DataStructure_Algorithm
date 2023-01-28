@@ -16,10 +16,6 @@ class School:
         self.number_of_graduates_in_the_last_year = data[8]
         self.county = data[9]
         self.system_type = data[10]
-    """
-    def __repr__(self):
-        return {'學校代碼': self.number, '學校名稱': self.name, '科系代碼': self.department_number, '科系名稱': self.department_name, '日間∕進修別': self.day_or_night, '等級別': self.degree, '學生數': self.number_of_students, '教師數': self.number_of_teachers, '上學年度畢業生數': self.number_of_graduates_in_the_last_year, '縣市名稱': self.county, '體系別': self.system_type}
-    """
 
 
 class Main:
