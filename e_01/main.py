@@ -1,6 +1,6 @@
 import time
 import random
-from tabulate import tabulate  # 建立表格
+from tabulate import tabulate  # 用來建立表格
 
 
 class School:
