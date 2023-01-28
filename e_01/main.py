@@ -86,8 +86,8 @@ class Main:
         with open('sort_time.txt', 'w', encoding='utf-8') as f_w:
             for i in range(3):
                 data.append(
-                    (f'測試資料檔 {i+1}.',  average_execution_time_insertion_sort[i], average_execution_time_merge_sort[i]))
-            f_w.write(tabulate(data, headers=header))
+                    (f'測試資料檔{i+1}.', f'{average_execution_time_insertion_sort[i][0]}s', f'{average_execution_time_merge_sort[i][0]}s'))
+            f_w.write(tabulate(data, headers=header, tablefmt="pretty"))
 
     def average_execution_time_insertion_sort(self):
         for i in range(10):
@@ -266,8 +266,11 @@ if __name__ == '__main__':
 
     main_insertion_sort.average_execution_time_insertion_sort()
     main_merge_sort.average_execution_time_merge_sort()
-    main_merge_sort.write([main_insertion_sort.input001_average_execution_time,
-                          main_insertion_sort.input002_average_execution_time, main_insertion_sort.input003_average_execution_time], [main_merge_sort.input001_average_execution_time, main_merge_sort.input002_average_execution_time, main_merge_sort.input003_average_execution_time])
+    a = [main_insertion_sort.input001_average_execution_time,
+         main_insertion_sort.input002_average_execution_time, main_insertion_sort.input003_average_execution_time]
+    b = [main_merge_sort.input001_average_execution_time,
+         main_merge_sort.input002_average_execution_time, main_merge_sort.input003_average_execution_time]
+    main_merge_sort.write(a, b)
 
     # ---------------------- test ----------------------
     """
