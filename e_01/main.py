@@ -50,6 +50,7 @@ class Main:
     def read_file(self):
         for i, val in enumerate(self.files):
             with open(val, 'r', encoding='utf-8') as f_r:
+                # splitlines(True)=>回傳一個list(以\n劃分)、 True代表保留換行符
                 data = f_r.read().splitlines(True)
                 data.pop(0)
 
