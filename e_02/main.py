@@ -1,10 +1,18 @@
-import copy  # 用來使用deepcopy函式
+import sys
 
 
 class Max_Heap:
     def __init__(self) -> None:
         self.result = []
         self.current_index = 0
+
+    def display(self):
+        print(
+            f"root: serial_number: {self.result[0]['serial_number']} number_of_students: {self.result[0]['number_of_students']}\n")
+        temp = []
+        for i in range(len(self.result)):
+            temp.append(self.result[i]['number_of_students'])
+        print(temp)
 
     def swap(self, current_node, parent_node):
         temp = self.result[current_node]
@@ -22,9 +30,6 @@ class Max_Heap:
                 continue
             if(self.result[current_node]['number_of_students'] > self.result[parent_node]['number_of_students']):
                 self.swap(current_node, parent_node)
-
-        if(len(self.result) == 9):
-            print(self.result)
 
     def push(self, data):
         self.result.append(data)
@@ -53,14 +58,16 @@ class School:
 
 
 class Main:
-    def __init__(self) -> None:
-        self.files = [f'input10{i+1}.txt' for i in range(2)]
-        self.input101 = []
-        self.input102 = []
+    def __init__(self, file_number) -> None:
+        self.file_number = file_number
+        self.files = [f'input10{i}.txt' for i in range(3, 6)]
+        self.input103 = []
+        self.input104 = []
+        self.input105 = []
         self.remove_special_characters()
         self.add_serial_number()
         self.read_file()
-        self.max_heap_test()
+        self.max_heap()
 
     def read_file(self):
         for i, val in enumerate(self.files):
@@ -74,9 +81,11 @@ class Main:
                     data[k][11] = data[k][11].replace('\n', '')  # 刪除最後一個換行符
                     school = School(data[k])
                     if i == 0:
-                        self.input101.append(school.__dict__)
+                        self.input103.append(school.__dict__)
                     elif i == 1:
-                        self.input102.append(school.__dict__)
+                        self.input104.append(school.__dict__)
+                    elif i == 2:
+                        self.input105.append(school.__dict__)
 
     def add_serial_number(self):
         number_of_attributes = []  # 紀錄兩個.txt檔案添加序號總共有多少個屬性(未添加序號: 11個)
@@ -111,26 +120,57 @@ class Main:
                 with open(i, 'w', encoding='utf-8') as f_w:
                     f_w.writelines(data[2:])
 
-    def max_heap_test(self):
+    def max_heap(self):
+        """
         test = [{'serial_number': 1, 'number_of_students': 20},
                 {'serial_number': 2, 'number_of_students': 80}, {
                     'serial_number': 3, 'number_of_students': 50},
                 {'serial_number': 4, 'number_of_students': 90}, {'serial_number': 5, 'number_of_students': 70}, {'serial_number': 6, 'number_of_students': 200}, {'serial_number': 7, 'number_of_students': 40}, {'serial_number': 8, 'number_of_students': 10}, {'serial_number': 9, 'number_of_students': 100}]
+        """
         temp = []  # 用來儲存只有序號與學生數的物件
         # 只要序號與學生數
-        for i in range(len(self.input101)):
-            temp.append(dict([('serial_number', self.input101[i]['serial_number']),
-                        ('number_of_students', self.input101[i]['number_of_students'])]))
-        # 字串轉整數型別
-        for i, val in enumerate(temp):
-            temp[i]['serial_number'] = int(temp[i]['serial_number'])
-            temp[i]['number_of_students'] = int(temp[i]['number_of_students'])
+        if(self.file_number == 103):
+            for i in range(len(self.input103)):
+                temp.append(dict([('serial_number', self.input103[i]['serial_number']),
+                                  ('number_of_students', self.input103[i]['number_of_students'])]))
+            # 字串轉整數型別
+            for i, val in enumerate(temp):
+                temp[i]['serial_number'] = int(temp[i]['serial_number'])
+                temp[i]['number_of_students'] = int(
+                    temp[i]['number_of_students'])
+
+        elif(self.file_number == 104):
+            for i in range(len(self.input104)):
+                temp.append(dict([('serial_number', self.input104[i]['serial_number']),
+                                  ('number_of_students', self.input104[i]['number_of_students'])]))
+            # 字串轉整數型別
+            for i, val in enumerate(temp):
+                temp[i]['serial_number'] = int(temp[i]['serial_number'])
+                temp[i]['number_of_students'] = int(
+                    temp[i]['number_of_students'])
+
+        elif(self.file_number == 105):
+            for i in range(len(self.input105)):
+                temp.append(dict([('serial_number', self.input105[i]['serial_number']),
+                                  ('number_of_students', self.input105[i]['number_of_students'])]))
+            # 字串轉整數型別
+            for i, val in enumerate(temp):
+                temp[i]['serial_number'] = int(temp[i]['serial_number'])
+                temp[i]['number_of_students'] = int(
+                    temp[i]['number_of_students'])
 
         heap = Max_Heap()
-        for i in test:
-            heap.push(i)
         # print(temp)
+        for i in temp:
+            heap.push(i)
+        heap.display()
 
 
 if __name__ == '__main__':
-    main = Main()
+    heap_construction = int(input('0. quit\n1. Build a max heap\n'))
+    file_number = int(input('Input a file number: (103 or 104 or 105)\n'))
+
+    if(heap_construction == 0 or file_number != 103 and file_number != 104 and file_number != 105):
+        sys.exit('quit')
+    elif(heap_construction == 1):
+        main = Main(file_number)
