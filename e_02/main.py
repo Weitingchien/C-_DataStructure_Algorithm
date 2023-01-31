@@ -1,10 +1,39 @@
+import copy  # 用來使用deepcopy函式
+
+
 class Max_Heap:
     def __init__(self) -> None:
-        self.serial_number = []
-        self.number_of_students = []
+        self.result = []
+        self.current_index = 0
+
+    def swap(self, current_node, parent_node):
+        temp = self.result[current_node]
+        self.result[current_node] = self.result[parent_node]
+        self.result[parent_node] = temp
+
+    def max_heap(self):
+        current_node = self.current_index - 1
+
+        # 比較每個節點的學生數量，如果還小於上一層parent node，就繼續交換
+        for i, val in enumerate(self.result):
+            parent_node = round(i // 2) - 1
+            # index小於0代表沒有這個parent node 所以要跳過這輪
+            if(parent_node < 0):
+                continue
+            if(self.result[current_node]['number_of_students'] > self.result[parent_node]['number_of_students']):
+                self.swap(current_node, parent_node)
+
+        if(len(self.result) == 9):
+            print(self.result)
 
     def push(self, data):
-        pass
+        self.result.append(data)
+        self.current_index += 1
+
+        if(len(self.result) < 2):
+            return
+
+        self.max_heap()
 
 
 class School:
@@ -31,7 +60,7 @@ class Main:
         self.remove_special_characters()
         self.add_serial_number()
         self.read_file()
-        self.max_heap()
+        self.max_heap_test()
 
     def read_file(self):
         for i, val in enumerate(self.files):
@@ -82,7 +111,11 @@ class Main:
                 with open(i, 'w', encoding='utf-8') as f_w:
                     f_w.writelines(data[2:])
 
-    def max_heap(self):
+    def max_heap_test(self):
+        test = [{'serial_number': 1, 'number_of_students': 20},
+                {'serial_number': 2, 'number_of_students': 80}, {
+                    'serial_number': 3, 'number_of_students': 50},
+                {'serial_number': 4, 'number_of_students': 90}, {'serial_number': 5, 'number_of_students': 70}, {'serial_number': 6, 'number_of_students': 200}, {'serial_number': 7, 'number_of_students': 40}, {'serial_number': 8, 'number_of_students': 10}, {'serial_number': 9, 'number_of_students': 100}]
         temp = []  # 用來儲存只有序號與學生數的物件
         # 只要序號與學生數
         for i in range(len(self.input101)):
@@ -94,6 +127,9 @@ class Main:
             temp[i]['number_of_students'] = int(temp[i]['number_of_students'])
 
         heap = Max_Heap()
+        for i in test:
+            heap.push(i)
+        # print(temp)
 
 
 if __name__ == '__main__':
