@@ -1,5 +1,9 @@
 class Max_Heap:
     def __init__(self) -> None:
+        self.serial_number = []
+        self.number_of_students = []
+
+    def push(self, data):
         pass
 
 
@@ -27,6 +31,7 @@ class Main:
         self.remove_special_characters()
         self.add_serial_number()
         self.read_file()
+        self.max_heap()
 
     def read_file(self):
         for i, val in enumerate(self.files):
@@ -77,8 +82,18 @@ class Main:
                 with open(i, 'w', encoding='utf-8') as f_w:
                     f_w.writelines(data[2:])
 
-    def max_heap():
-        pass
+    def max_heap(self):
+        temp = []  # 用來儲存只有序號與學生數的物件
+        # 只要序號與學生數
+        for i in range(len(self.input101)):
+            temp.append(dict([('serial_number', self.input101[i]['serial_number']),
+                        ('number_of_students', self.input101[i]['number_of_students'])]))
+        # 字串轉整數型別
+        for i, val in enumerate(temp):
+            temp[i]['serial_number'] = int(temp[i]['serial_number'])
+            temp[i]['number_of_students'] = int(temp[i]['number_of_students'])
+
+        heap = Max_Heap()
 
 
 if __name__ == '__main__':
