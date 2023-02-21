@@ -16,15 +16,15 @@ class Heap:
         self.current_index = 0
 
     def display(self):
-        #left_bottom = [i for i in range(len(self.result)) if i % 2 != 0]
         print(
             f"root: serial_number: {self.result[0]['serial_number']} number_of_students: {self.result[0]['number_of_students']}"
         )
+
         temp = []  # 儲存所有節點的學生數
         left_parent_node_index = []
         common_difference = 2
         bottom = 0
-
+        
         for i in range(len(self.result)):
             temp.append(self.result[i]["number_of_students"])
             if i == len(self.result) - 1:
@@ -51,41 +51,42 @@ class Heap:
 
         print(
             f"leftmost bottom: serial_number: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['serial_number']} number_of_students: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['number_of_students']}")
+        
+        if(self.mode == 1):
+            print(f"Max heap: {temp}")
+        elif(self.mode == 2):
+            print(f"Min heap: {temp}")
+        
 
-        print(f"Max heap: {temp}")
-
-    def swap(self, current_node, parent_node):
-        temp = self.result[current_node]
-        self.result[current_node] = self.result[parent_node]
-        self.result[parent_node] = temp
+    def swap(self, current_node_index, parent_node_index):
+        temp = self.result[current_node_index]
+        self.result[current_node_index] = self.result[parent_node_index]
+        self.result[parent_node_index] = temp
 
     def heap(self):
-        current_node = self.current_index - 1
+        current_node_index = len(self.result) - 1
+        parent_node_index = int((current_node_index - 1) / 2)
 
-        # 比較每個節點的學生數量，如果還小於上一層parent node，就繼續交換
         if(self.mode == 1):  # max heap
-            for i, val in enumerate(self.result):
-                parent_node = round(i // 2) - 1
-                # index小於0代表沒有這個parent node 所以要跳過這輪
-                if parent_node < 0:
-                    continue
-                if (self.result[current_node]["number_of_students"] > self.result[parent_node]["number_of_students"]):
-                    self.swap(current_node, parent_node)
-
+            while((parent_node_index >= 0) and (self.result[current_node_index]["number_of_students"] > self.result[parent_node_index]["number_of_students"])):
+                self.swap(current_node_index, parent_node_index)
+                # 繼續往上層比較
+                current_node_index = parent_node_index
+                parent_node_index = int((current_node_index - 1) / 2)
+        
         elif(self.mode == 2):  # min heap
-            for i, val in enumerate(self.result):
-                parent_node = round(i // 2) - 1
-                # index小於0代表沒有這個parent node 所以要跳過這輪
-                if parent_node < 0:
-                    continue
-                if (self.result[current_node]["number_of_students"] < self.result[parent_node]["number_of_students"]):
-                    self.swap(current_node, parent_node)
+            while((parent_node_index >= 0) and (self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"])):
+                self.swap(current_node_index, parent_node_index)
+                # 繼續往上層比較
+                current_node_index = parent_node_index
+                parent_node_index = int((current_node_index - 1) / 2)
+        
 
     def push(self, data):
         self.result.append(data)
-        self.current_index += 1
+        size = len(self.result)
 
-        if len(self.result) < 2:
+        if size < 2:
             return
 
         self.heap()
@@ -173,10 +174,10 @@ class Main:
 
     def heap(self):
         """
-        test = [{'serial_number': 1, 'number_of_students': 20},
-                {'serial_number': 2, 'number_of_students': 80}, {
-                    'serial_number': 3, 'number_of_students': 50},
-                {'serial_number': 4, 'number_of_students': 90}, {'serial_number': 5, 'number_of_students': 70}, {'serial_number': 6, 'number_of_students': 200}, {'serial_number': 7, 'number_of_students': 40}, {'serial_number': 8, 'number_of_students': 10}, {'serial_number': 9, 'number_of_students': 100}]
+        test = [{'serial_number': 1, 'number_of_students': 3},
+                {'serial_number': 2, 'number_of_students': 2}, {
+                    'serial_number': 3, 'number_of_students': 1},
+                {'serial_number': 4, 'number_of_students': 5}, {'serial_number': 5, 'number_of_students': 4}]
         """
         temp = []  # 用來儲存只有序號與學生數的物件
         # 只要序號與學生數
@@ -245,6 +246,11 @@ class Main:
         # print(temp)
         for i in temp:
             heap.push(i)
+        
+        """
+        for i in test:
+            heap.push(i)
+        """
         heap.display()
 
     def deap():
