@@ -1,19 +1,46 @@
 import sys
 
 
-class Deap:
+class Min_Max_Heap(Heap):
     def __init__(self) -> None:
-        self.result = []
+        super().__init__()
+        self.current_level = 0
 
-    def deap(self):
-        pass
+    def min_max_heap(self, size):
+        odd = 0
+        even = 0
+        current_node_index = size - 1
+        parent_node_index = int((current_node_index - 1) / 2)
+        if(self.current_level % 2 != 0):
+            while (parent_node_index > 0) and self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"]:
+                self.swap(current_node_index, parent_node_index)
+
+
+    def maximum_number_of_nodes(self, size):
+        nodes = 2 ** (size - 1)
+        if(nodes > size):
+            nodes = 2 ** (size - 2)
+        return nodes 
+
+    def push(self, el):
+        self.result.append(el)
+
+        size = len(self.result)
+        maximum_number_of_nodes = self.maximum_number_of_nodes(size)
+        if(maximum_number_of_nodes <= size):
+            self.current_level += 1
+
+        if size < 2:
+            return
+
+        self.min_max_heap(size)
 
 
 class Heap:
     def __init__(self, mode) -> None:
         self.mode = mode
         self.result = []
-        self.current_index = 0
+        #self.current_index = 0
 
     def display(self):
         print(
@@ -24,18 +51,18 @@ class Heap:
         left_parent_node_index = []
         common_difference = 2
         bottom = 0
-        
+
+        # bottom
         for i in range(len(self.result)):
             temp.append(self.result[i]["number_of_students"])
             if i == len(self.result) - 1:
-                if (self.result[i]["number_of_students"] >= self.result[i - 1]["number_of_students"]):
-                    bottom = self.result[i]
-                else:
-                    bottom = self.result[i-1]
+                bottom = self.result[i]
 
                 print(
-                    f"bottom: serial_number: {bottom['serial_number']} number_of_students: {bottom['number_of_students']}")
+                    f"bottom: serial_number: {bottom['serial_number']} number_of_students: {bottom['number_of_students']}"
+                )
 
+        # leftmost bottom
         for i in range(len(self.result)):
             if i == 0 or i == 1:
                 left_parent_node_index.append(i)
@@ -50,13 +77,14 @@ class Heap:
                     break
 
         print(
-            f"leftmost bottom: serial_number: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['serial_number']} number_of_students: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['number_of_students']}")
-        
-        if(self.mode == 1):
+            f"leftmost bottom: serial_number: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['serial_number']} number_of_students: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['number_of_students']}"
+        )
+
+        # Max heap or Min heap
+        if self.mode == 1:
             print(f"Max heap: {temp}")
-        elif(self.mode == 2):
+        elif self.mode == 2:
             print(f"Min heap: {temp}")
-        
 
     def swap(self, current_node_index, parent_node_index):
         temp = self.result[current_node_index]
@@ -67,20 +95,25 @@ class Heap:
         current_node_index = len(self.result) - 1
         parent_node_index = int((current_node_index - 1) / 2)
 
-        if(self.mode == 1):  # max heap
-            while((parent_node_index >= 0) and (self.result[current_node_index]["number_of_students"] > self.result[parent_node_index]["number_of_students"])):
+        if self.mode == 1:  # max heap
+            while (parent_node_index >= 0) and (
+                self.result[current_node_index]["number_of_students"]
+                > self.result[parent_node_index]["number_of_students"]
+            ):
                 self.swap(current_node_index, parent_node_index)
                 # 繼續往上層比較
                 current_node_index = parent_node_index
                 parent_node_index = int((current_node_index - 1) / 2)
-        
-        elif(self.mode == 2):  # min heap
-            while((parent_node_index >= 0) and (self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"])):
+
+        elif self.mode == 2:  # min heap
+            while (parent_node_index >= 0) and (
+                self.result[current_node_index]["number_of_students"]
+                < self.result[parent_node_index]["number_of_students"]
+            ):
                 self.swap(current_node_index, parent_node_index)
                 # 繼續往上層比較
                 current_node_index = parent_node_index
                 parent_node_index = int((current_node_index - 1) / 2)
-        
 
     def push(self, data):
         self.result.append(data)
@@ -112,14 +145,17 @@ class Main:
     def __init__(self, file_number, mode) -> None:
         self.mode = mode
         self.file_number = file_number
-        self.files = [f"input10{i}.txt" for i in range(3, 6)]
-        self.input103 = []
-        self.input104 = []
-        self.input105 = []
+        self.files = [f"input10{i}.txt" for i in range(1, 3)]
+        self.input101 = []
+        self.input102 = []
         self.remove_special_characters()
         self.add_serial_number()
         self.read_file()
+        # Max heap or Min heap
         self.heap()
+        # min max heap
+        if self.mode == 3:
+            self.min_max_heap()
 
     def read_file(self):
         for i, val in enumerate(self.files):
@@ -133,11 +169,9 @@ class Main:
                     data[k][11] = data[k][11].replace("\n", "")  # 刪除最後一個換行符
                     school = School(data[k])
                     if i == 0:
-                        self.input103.append(school.__dict__)
+                        self.input101.append(school.__dict__)
                     elif i == 1:
-                        self.input104.append(school.__dict__)
-                    elif i == 2:
-                        self.input105.append(school.__dict__)
+                        self.input102.append(school.__dict__)
 
     def add_serial_number(self):
         number_of_attributes = []  # 紀錄兩個.txt檔案添加序號總共有多少個屬性(未添加序號: 11個)
@@ -181,16 +215,15 @@ class Main:
         """
         temp = []  # 用來儲存只有序號與學生數的物件
         # 只要序號與學生數
-        if self.file_number == 103:
-            for i in range(len(self.input103)):
+        if self.file_number == 101:
+            for i in range(len(self.input101)):
                 temp.append(
                     dict(
                         [
-                            ("serial_number",
-                             self.input103[i]["serial_number"]),
+                            ("serial_number", self.input101[i]["serial_number"]),
                             (
                                 "number_of_students",
-                                self.input103[i]["number_of_students"],
+                                self.input101[i]["number_of_students"],
                             ),
                         ]
                     )
@@ -198,19 +231,17 @@ class Main:
             # 字串轉整數型別
             for i, val in enumerate(temp):
                 temp[i]["serial_number"] = int(temp[i]["serial_number"])
-                temp[i]["number_of_students"] = int(
-                    temp[i]["number_of_students"])
+                temp[i]["number_of_students"] = int(temp[i]["number_of_students"])
 
-        elif self.file_number == 104:
-            for i in range(len(self.input104)):
+        elif self.file_number == 102:
+            for i in range(len(self.input102)):
                 temp.append(
                     dict(
                         [
-                            ("serial_number",
-                             self.input104[i]["serial_number"]),
+                            ("serial_number", self.input102[i]["serial_number"]),
                             (
                                 "number_of_students",
-                                self.input104[i]["number_of_students"],
+                                self.input102[i]["number_of_students"],
                             ),
                         ]
                     )
@@ -218,56 +249,50 @@ class Main:
             # 字串轉整數型別
             for i, val in enumerate(temp):
                 temp[i]["serial_number"] = int(temp[i]["serial_number"])
-                temp[i]["number_of_students"] = int(
-                    temp[i]["number_of_students"])
-
-        elif self.file_number == 105:
-            for i in range(len(self.input105)):
-                temp.append(
-                    dict(
-                        [
-                            ("serial_number",
-                             self.input105[i]["serial_number"]),
-                            (
-                                "number_of_students",
-                                self.input105[i]["number_of_students"],
-                            ),
-                        ]
-                    )
-                )
-            # 字串轉整數型別
-            for i, val in enumerate(temp):
-                temp[i]["serial_number"] = int(temp[i]["serial_number"])
-                temp[i]["number_of_students"] = int(
-                    temp[i]["number_of_students"])
+                temp[i]["number_of_students"] = int(temp[i]["number_of_students"])
 
         heap = Heap(self.mode)
-        #min_heap = Min_Heap()
+        # min_heap = Min_Heap()
         # print(temp)
         for i in temp:
             heap.push(i)
-        
+
         """
         for i in test:
             heap.push(i)
         """
         heap.display()
 
-    def deap():
-        deap = Deap()
+    def min_max_heap():
+        min_max_heap = Min_Max_Heap()
+        test = [
+            {"serial_number": 1, "number_of_students": 45},
+            {"serial_number": 2, "number_of_students": 40},
+            {"serial_number": 3, "number_of_students": 19},
+            {"serial_number": 4, "number_of_students": 5},
+            {"serial_number": 5, "number_of_students": 10},
+            {"serial_number": 6, "number_of_students": 50},
+            {"serial_number": 7, "number_of_students": 34},
+            {"serial_number": 8, "number_of_students": 13},
+            {"serial_number": 9, "number_of_students": 28},
+            {"serial_number": 10, "number_of_students": 31},
+            {"serial_number": 11, "number_of_students": 18},
+            {"serial_number": 12, "number_of_students": 32},
+            {"serial_number": 13, "number_of_students": 15},
+        ]
+        for i in test:
+            min_max_heap.push(i)
 
 
 if __name__ == "__main__":
     heap_construction = int(
-        input("0. quit\n1. Build a max heap\n2. Build a min heap\n"))
-    file_number = int(input("Input a file number: (103 or 104 or 105)\n"))
+        input(
+            "0. quit\n1. Build a max heap\n2. Build a min heap\n3. Build a min max heap"
+        )
+    )
+    file_number = int(input("Input a file number: (101 or 102)\n"))
 
-    if (
-        heap_construction == 0
-        or file_number != 103
-        and file_number != 104
-        and file_number != 105
-    ):
+    if heap_construction == 0 or file_number != 101 and file_number != 102:
         sys.exit("quit")
     elif heap_construction != 0:
         main = Main(file_number, heap_construction)
