@@ -5,30 +5,33 @@ class Min_Max_Heap(Heap):
     def __init__(self) -> None:
         super().__init__()
         self.current_level = 0
+    
+    def is_max_level(self, current_node_index):
+        while(current_node_index > 0):
+            current_node_index = int((current_node_index - 1) / 2)
+            self.current_level += 1
+        return self.current_level % 2 != 0
+    
+    def reheap_up_max():
+        pass
+
+    def reheap_up_min():
+        pass
+
 
     def min_max_heap(self, size):
-        odd = 0
-        even = 0
         current_node_index = size - 1
+        is_max_level = self.is_max_level(current_node_index)
         parent_node_index = int((current_node_index - 1) / 2)
-        if(self.current_level % 2 != 0):
-            while (parent_node_index > 0) and self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"]:
-                self.swap(current_node_index, parent_node_index)
+        if((is_max_level) and self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"]):
+            self.swap(current_node_index, parent_node_index)
 
 
-    def maximum_number_of_nodes(self, size):
-        nodes = 2 ** (size - 1)
-        if(nodes > size):
-            nodes = 2 ** (size - 2)
-        return nodes 
 
     def push(self, el):
         self.result.append(el)
 
         size = len(self.result)
-        maximum_number_of_nodes = self.maximum_number_of_nodes(size)
-        if(maximum_number_of_nodes <= size):
-            self.current_level += 1
 
         if size < 2:
             return
