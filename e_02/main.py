@@ -1,53 +1,15 @@
 import sys
 
 
-class Min_Max_Heap(Heap):
-    def __init__(self) -> None:
-        super().__init__()
-        self.current_level = 0
-    
-    def is_max_level(self, current_node_index):
-        while(current_node_index > 0):
-            current_node_index = int((current_node_index - 1) / 2)
-            self.current_level += 1
-        return self.current_level % 2 != 0
-    
-    def reheap_up_max():
-        pass
-
-    def reheap_up_min():
-        pass
-
-
-    def min_max_heap(self, size):
-        current_node_index = size - 1
-        is_max_level = self.is_max_level(current_node_index)
-        parent_node_index = int((current_node_index - 1) / 2)
-        if((is_max_level) and self.result[current_node_index]["number_of_students"] < self.result[parent_node_index]["number_of_students"]):
-            self.swap(current_node_index, parent_node_index)
-
-
-
-    def push(self, el):
-        self.result.append(el)
-
-        size = len(self.result)
-
-        if size < 2:
-            return
-
-        self.min_max_heap(size)
-
-
 class Heap:
     def __init__(self, mode) -> None:
         self.mode = mode
         self.result = []
-        #self.current_index = 0
+        # self.current_index = 0
 
     def display(self):
         print(
-            f"root: serial_number: {self.result[0]['serial_number']} number_of_students: {self.result[0]['number_of_students']}"
+            f"root: serial_number: {self.result[0]['serial_number']} number_of_graduates_in_the_last_year: {self.result[0]['number_of_graduates_in_the_last_year']}"
         )
 
         temp = []  # 儲存所有節點的學生數
@@ -57,12 +19,12 @@ class Heap:
 
         # bottom
         for i in range(len(self.result)):
-            temp.append(self.result[i]["number_of_students"])
+            temp.append(self.result[i]["number_of_graduates_in_the_last_year"])
             if i == len(self.result) - 1:
                 bottom = self.result[i]
 
                 print(
-                    f"bottom: serial_number: {bottom['serial_number']} number_of_students: {bottom['number_of_students']}"
+                    f"bottom: serial_number: {bottom['serial_number']} number_of_graduates_in_the_last_year: {bottom['number_of_graduates_in_the_last_year']}"
                 )
 
         # leftmost bottom
@@ -75,19 +37,23 @@ class Heap:
                 left_parent_node_index.append(
                     left_parent_node_index[i - 1] + common_difference
                 )
-                if left_parent_node_index[i] > len(self.result):
+                # print(f"left_parent_node_index: {left_parent_node_index}")
+                if left_parent_node_index[i] > len(self.result) - 1:
                     left_parent_node_index.pop()
+                    # print(f"left_parent_node_index.pop(): {left_parent_node_index}")
                     break
 
         print(
-            f"leftmost bottom: serial_number: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['serial_number']} number_of_students: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['number_of_students']}"
+            f"leftmost bottom: serial_number: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['serial_number']} number_of_graduates_in_the_last_year: {self.result[left_parent_node_index[len(left_parent_node_index)-1]]['number_of_graduates_in_the_last_year']}"
         )
 
-        # Max heap or Min heap
+        # Max heap , Min heap, Min_Max heap
         if self.mode == 1:
             print(f"Max heap: {temp}")
         elif self.mode == 2:
             print(f"Min heap: {temp}")
+        elif self.mode == 3:
+            print(f"Min_Max heap: {temp}")
 
     def swap(self, current_node_index, parent_node_index):
         temp = self.result[current_node_index]
@@ -100,8 +66,8 @@ class Heap:
 
         if self.mode == 1:  # max heap
             while (parent_node_index >= 0) and (
-                self.result[current_node_index]["number_of_students"]
-                > self.result[parent_node_index]["number_of_students"]
+                self.result[current_node_index]["number_of_graduates_in_the_last_year"]
+                > self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
             ):
                 self.swap(current_node_index, parent_node_index)
                 # 繼續往上層比較
@@ -110,8 +76,8 @@ class Heap:
 
         elif self.mode == 2:  # min heap
             while (parent_node_index >= 0) and (
-                self.result[current_node_index]["number_of_students"]
-                < self.result[parent_node_index]["number_of_students"]
+                self.result[current_node_index]["number_of_graduates_in_the_last_year"]
+                < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
             ):
                 self.swap(current_node_index, parent_node_index)
                 # 繼續往上層比較
@@ -126,6 +92,105 @@ class Heap:
             return
 
         self.heap()
+
+
+class Min_Max_Heap(Heap):
+    def __init__(self, mode) -> None:
+        super().__init__(mode)
+        self.current_level = 0
+
+    def reheap_up_min(self, parent_node_index):
+        grandparent_node_index = int((parent_node_index - 1) / 2)
+        if grandparent_node_index < 0:
+            return
+        if (
+            self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
+            < self.result[grandparent_node_index][
+                "number_of_graduates_in_the_last_year"
+            ]
+        ):
+            self.swap(parent_node_index, grandparent_node_index)
+            self.reheap_up_min(grandparent_node_index)
+
+    def reheap_up_max(self, parent_node_index):
+        grandparent_node_index = int((parent_node_index - 1) / 2)
+        if grandparent_node_index < 0:
+            return
+        if (
+            self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
+            > self.result[grandparent_node_index][
+                "number_of_graduates_in_the_last_year"
+            ]
+        ):
+            self.swap(parent_node_index, grandparent_node_index)
+            self.reheap_up_max(grandparent_node_index)
+
+    def reheap(self, parent_node_index, current_node_index):
+        grandparent_node_index = int((parent_node_index - 1) / 2)
+        if grandparent_node_index < 0:
+            return
+        if (
+            self.result[current_node_index]["number_of_graduates_in_the_last_year"]
+            < self.result[grandparent_node_index][
+                "number_of_graduates_in_the_last_year"
+            ]
+        ):
+            self.swap(current_node_index, grandparent_node_index)
+            current_node_index = grandparent_node_index
+            grandparent_node_index = int((grandparent_node_index) - 1 / 2)
+            self.reheap(grandparent_node_index, current_node_index)
+
+    def is_max_level(self, current_node_index):
+        self.current_level = 0  # 初始化，避免重複新增時累加
+        while current_node_index > 0:
+            current_node_index = int((current_node_index - 1) / 2)
+            self.current_level += 1
+        return self.current_level % 2 != 0
+
+    def min_max_heap(self, size):
+        current_node_index = size - 1
+        is_max_level = self.is_max_level(current_node_index)
+        parent_node_index = int((current_node_index - 1) / 2)
+
+        if (is_max_level) and self.result[current_node_index][
+            "number_of_graduates_in_the_last_year"
+        ] < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]:
+            print("Max level:當前節點小於父節點")
+            # print(f"current_node_index: {current_node_index}")
+            self.swap(current_node_index, parent_node_index)
+            parent_node_index = int((parent_node_index - 1) / 2)
+            self.reheap_up_min(parent_node_index)
+
+        elif (
+            not is_max_level
+            and self.result[current_node_index]["number_of_graduates_in_the_last_year"]
+            > self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
+        ):
+            print("Min level:當前節點大於父節點")
+            self.swap(current_node_index, parent_node_index)
+            parent_node_index = int((parent_node_index - 1) / 2)
+            self.reheap_up_max(parent_node_index)
+
+        elif (
+            not is_max_level
+            and self.result[current_node_index]["number_of_graduates_in_the_last_year"]
+            < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
+        ):
+            print(
+                "Min level:當前節點小於父節點"
+            )  # 小於父節點不需要交換，但是要進一步判斷是否小於祖父節點，如果比祖父節點小就需要跟祖父節點作交換
+            parent_node_index = int((parent_node_index - 1) / 2)
+            self.reheap(parent_node_index, current_node_index)
+
+    def push(self, el):
+        self.result.append(el)
+
+        size = len(self.result)
+
+        if size < 2:
+            return
+
+        self.min_max_heap(size)
 
 
 class School:
@@ -154,10 +219,11 @@ class Main:
         self.remove_special_characters()
         self.add_serial_number()
         self.read_file()
-        # Max heap or Min heap
-        self.heap()
-        # min max heap
-        if self.mode == 3:
+        self.temp = self.input_filter()
+
+        if self.mode != 3:
+            self.heap()
+        elif self.mode == 3:
             self.min_max_heap()
 
     def read_file(self):
@@ -209,13 +275,7 @@ class Main:
                 with open(i, "w", encoding="utf-8") as f_w:
                     f_w.writelines(data[2:])
 
-    def heap(self):
-        """
-        test = [{'serial_number': 1, 'number_of_students': 3},
-                {'serial_number': 2, 'number_of_students': 2}, {
-                    'serial_number': 3, 'number_of_students': 1},
-                {'serial_number': 4, 'number_of_students': 5}, {'serial_number': 5, 'number_of_students': 4}]
-        """
+    def input_filter(self):
         temp = []  # 用來儲存只有序號與學生數的物件
         # 只要序號與學生數
         if self.file_number == 101:
@@ -225,16 +285,21 @@ class Main:
                         [
                             ("serial_number", self.input101[i]["serial_number"]),
                             (
-                                "number_of_students",
-                                self.input101[i]["number_of_students"],
+                                "number_of_graduates_in_the_last_year",
+                                self.input101[i][
+                                    "number_of_graduates_in_the_last_year"
+                                ],
                             ),
                         ]
                     )
                 )
+
             # 字串轉整數型別
             for i, val in enumerate(temp):
                 temp[i]["serial_number"] = int(temp[i]["serial_number"])
-                temp[i]["number_of_students"] = int(temp[i]["number_of_students"])
+                temp[i]["number_of_graduates_in_the_last_year"] = int(
+                    temp[i]["number_of_graduates_in_the_last_year"]
+                )
 
         elif self.file_number == 102:
             for i in range(len(self.input102)):
@@ -243,8 +308,10 @@ class Main:
                         [
                             ("serial_number", self.input102[i]["serial_number"]),
                             (
-                                "number_of_students",
-                                self.input102[i]["number_of_students"],
+                                "number_of_graduates_in_the_last_year",
+                                self.input102[i][
+                                    "number_of_graduates_in_the_last_year"
+                                ],
                             ),
                         ]
                     )
@@ -252,45 +319,54 @@ class Main:
             # 字串轉整數型別
             for i, val in enumerate(temp):
                 temp[i]["serial_number"] = int(temp[i]["serial_number"])
-                temp[i]["number_of_students"] = int(temp[i]["number_of_students"])
+                temp[i]["number_of_graduates_in_the_last_year"] = int(
+                    temp[i]["number_of_graduates_in_the_last_year"]
+                )
 
-        heap = Heap(self.mode)
-        # min_heap = Min_Heap()
-        # print(temp)
-        for i in temp:
-            heap.push(i)
+        return temp
 
+    def heap(self):
         """
+        test = [{'serial_number': 1, 'number_of_graduates_in_the_last_year': 3},
+                {'serial_number': 2, 'number_of_graduates_in_the_last_year': 2}, {
+                    'serial_number': 3, 'number_of_graduates_in_the_last_year': 1},
+                {'serial_number': 4, 'number_of_graduates_in_the_last_year': 5}, {'serial_number': 5, 'number_of_graduates_in_the_last_year': 4}]
         for i in test:
             heap.push(i)
         """
+
+        heap = Heap(self.mode)
+        for i in self.temp:
+            heap.push(i)
+
         heap.display()
 
-    def min_max_heap():
-        min_max_heap = Min_Max_Heap()
+    def min_max_heap(self):
+        min_max_heap = Min_Max_Heap(self.mode)
+        """
         test = [
-            {"serial_number": 1, "number_of_students": 45},
-            {"serial_number": 2, "number_of_students": 40},
-            {"serial_number": 3, "number_of_students": 19},
-            {"serial_number": 4, "number_of_students": 5},
-            {"serial_number": 5, "number_of_students": 10},
-            {"serial_number": 6, "number_of_students": 50},
-            {"serial_number": 7, "number_of_students": 34},
-            {"serial_number": 8, "number_of_students": 13},
-            {"serial_number": 9, "number_of_students": 28},
-            {"serial_number": 10, "number_of_students": 31},
-            {"serial_number": 11, "number_of_students": 18},
-            {"serial_number": 12, "number_of_students": 32},
-            {"serial_number": 13, "number_of_students": 15},
+            {"serial_number": 1, "number_of_graduates_in_the_last_year": 10},
+            {"serial_number": 2, "number_of_graduates_in_the_last_year": 12},
+            {"serial_number": 3, "number_of_graduates_in_the_last_year": 30},
+            {"serial_number": 4, "number_of_graduates_in_the_last_year": 8},
+            {"serial_number": 5, "number_of_graduates_in_the_last_year": 60},
+            {"serial_number": 6, "number_of_graduates_in_the_last_year": 40},
+            {"serial_number": 7, "number_of_graduates_in_the_last_year": 70},
         ]
         for i in test:
             min_max_heap.push(i)
+        """
+
+        for i in self.temp:
+            min_max_heap.push(i)
+
+        min_max_heap.display()
 
 
 if __name__ == "__main__":
     heap_construction = int(
         input(
-            "0. quit\n1. Build a max heap\n2. Build a min heap\n3. Build a min max heap"
+            "0. quit\n1. Build a max heap\n2. Build a min heap\n3. Build a min max heap\n"
         )
     )
     file_number = int(input("Input a file number: (101 or 102)\n"))
