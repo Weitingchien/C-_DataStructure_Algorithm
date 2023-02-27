@@ -99,32 +99,6 @@ class Min_Max_Heap(Heap):
         super().__init__(mode)
         self.current_level = 0
 
-    def reheap_up_min(self, parent_node_index):
-        grandparent_node_index = int((parent_node_index - 1) / 2)
-        if grandparent_node_index < 0:
-            return
-        if (
-            self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
-            < self.result[grandparent_node_index][
-                "number_of_graduates_in_the_last_year"
-            ]
-        ):
-            self.swap(parent_node_index, grandparent_node_index)
-            self.reheap_up_min(grandparent_node_index)
-
-    def reheap_up_max(self, parent_node_index):
-        grandparent_node_index = int((parent_node_index - 1) / 2)
-        if grandparent_node_index < 0:
-            return
-        if (
-            self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
-            > self.result[grandparent_node_index][
-                "number_of_graduates_in_the_last_year"
-            ]
-        ):
-            self.swap(parent_node_index, grandparent_node_index)
-            self.reheap_up_max(grandparent_node_index)
-
     def reheap(self, parent_node_index, current_node_index):
         grandparent_node_index = int((parent_node_index - 1) / 2)
         if grandparent_node_index < 0:
@@ -135,6 +109,9 @@ class Min_Max_Heap(Heap):
                 "number_of_graduates_in_the_last_year"
             ]
         ):
+            print(
+                f"(reheap) current_node_index: {current_node_index} grandparent_node_index: {grandparent_node_index}"
+            )
             self.swap(current_node_index, grandparent_node_index)
             current_node_index = grandparent_node_index
             grandparent_node_index = int((grandparent_node_index) - 1 / 2)
@@ -156,10 +133,14 @@ class Min_Max_Heap(Heap):
             "number_of_graduates_in_the_last_year"
         ] < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]:
             print("Max level:當前節點小於父節點")
+            print(
+                f"current_node_index: {current_node_index} -> current_node: {self.result[current_node_index]['number_of_graduates_in_the_last_year']}, parent_node_index: {parent_node_index} parent_node: {self.result[parent_node_index]['number_of_graduates_in_the_last_year']}"
+            )
             # print(f"current_node_index: {current_node_index}")
             self.swap(current_node_index, parent_node_index)
+            current_node_index = parent_node_index
             parent_node_index = int((parent_node_index - 1) / 2)
-            self.reheap_up_min(parent_node_index)
+            self.reheap(parent_node_index, current_node_index)
 
         elif (
             not is_max_level
@@ -167,20 +148,24 @@ class Min_Max_Heap(Heap):
             > self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
         ):
             print("Min level:當前節點大於父節點")
+            print(
+                f"current_node_index: {current_node_index} -> current_node: {self.result[current_node_index]['number_of_graduates_in_the_last_year']}, parent_node_index: {parent_node_index} parent_node: {self.result[parent_node_index]['number_of_graduates_in_the_last_year']}"
+            )
             self.swap(current_node_index, parent_node_index)
-            parent_node_index = int((parent_node_index - 1) / 2)
-            self.reheap_up_max(parent_node_index)
-
+            parent_node_index = int((current_node_index - 1) / 2)
+            self.reheap(parent_node_index, current_node_index)
+        """
         elif (
             not is_max_level
             and self.result[current_node_index]["number_of_graduates_in_the_last_year"]
             < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
         ):
             print(
-                "Min level:當前節點小於父節點"
+                "Min level:當前節點小於父節點(進一步檢查是否小於祖父節點)"
             )  # 小於父節點不需要交換，但是要進一步判斷是否小於祖父節點，如果比祖父節點小就需要跟祖父節點作交換
             parent_node_index = int((parent_node_index - 1) / 2)
             self.reheap(parent_node_index, current_node_index)
+        """
 
     def push(self, el):
         self.result.append(el)
@@ -323,6 +308,7 @@ class Main:
                     temp[i]["number_of_graduates_in_the_last_year"]
                 )
 
+        print(temp)
         return temp
 
     def heap(self):
@@ -336,6 +322,7 @@ class Main:
         """
 
         heap = Heap(self.mode)
+
         for i in self.temp:
             heap.push(i)
 
@@ -343,22 +330,25 @@ class Main:
 
     def min_max_heap(self):
         min_max_heap = Min_Max_Heap(self.mode)
-        """
+
         test = [
-            {"serial_number": 1, "number_of_graduates_in_the_last_year": 10},
-            {"serial_number": 2, "number_of_graduates_in_the_last_year": 12},
-            {"serial_number": 3, "number_of_graduates_in_the_last_year": 30},
-            {"serial_number": 4, "number_of_graduates_in_the_last_year": 8},
-            {"serial_number": 5, "number_of_graduates_in_the_last_year": 60},
-            {"serial_number": 6, "number_of_graduates_in_the_last_year": 40},
-            {"serial_number": 7, "number_of_graduates_in_the_last_year": 70},
+            {"serial_number": 1, "number_of_graduates_in_the_last_year": 18},
+            {"serial_number": 2, "number_of_graduates_in_the_last_year": 5},
+            {"serial_number": 3, "number_of_graduates_in_the_last_year": 14},
+            {"serial_number": 4, "number_of_graduates_in_the_last_year": 20},
+            {"serial_number": 5, "number_of_graduates_in_the_last_year": 45},
+            {"serial_number": 6, "number_of_graduates_in_the_last_year": 33},
+            {"serial_number": 7, "number_of_graduates_in_the_last_year": 8},
+            {"serial_number": 7, "number_of_graduates_in_the_last_year": 11},
+            {"serial_number": 7, "number_of_graduates_in_the_last_year": 1},
         ]
         for i in test:
             min_max_heap.push(i)
-        """
 
+        """
         for i in self.temp:
             min_max_heap.push(i)
+        """
 
         min_max_heap.display()
 
