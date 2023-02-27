@@ -154,18 +154,6 @@ class Min_Max_Heap(Heap):
             self.swap(current_node_index, parent_node_index)
             parent_node_index = int((current_node_index - 1) / 2)
             self.reheap(parent_node_index, current_node_index)
-        """
-        elif (
-            not is_max_level
-            and self.result[current_node_index]["number_of_graduates_in_the_last_year"]
-            < self.result[parent_node_index]["number_of_graduates_in_the_last_year"]
-        ):
-            print(
-                "Min level:當前節點小於父節點(進一步檢查是否小於祖父節點)"
-            )  # 小於父節點不需要交換，但是要進一步判斷是否小於祖父節點，如果比祖父節點小就需要跟祖父節點作交換
-            parent_node_index = int((parent_node_index - 1) / 2)
-            self.reheap(parent_node_index, current_node_index)
-        """
 
     def push(self, el):
         self.result.append(el)
@@ -330,7 +318,7 @@ class Main:
 
     def min_max_heap(self):
         min_max_heap = Min_Max_Heap(self.mode)
-
+        """
         test = [
             {"serial_number": 1, "number_of_graduates_in_the_last_year": 18},
             {"serial_number": 2, "number_of_graduates_in_the_last_year": 5},
@@ -344,11 +332,10 @@ class Main:
         ]
         for i in test:
             min_max_heap.push(i)
-
         """
+
         for i in self.temp:
             min_max_heap.push(i)
-        """
 
         min_max_heap.display()
 
